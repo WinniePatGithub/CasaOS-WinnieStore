@@ -1,0 +1,66 @@
+name: syncthing
+services:
+    syncthing:
+        image: linuxserver/syncthing:1
+environment:
+  PGID: $PGID                           # Preset Group ID
+  PUID: $PUID                           # Preset User ID
+  TZ: $TZ                               # Current system timezone
+...
+volumes:
+  - type: bind
+    source: /DATA/AppData/$AppID/config # $AppID = app name, e.g. syncthing
+x-casaos:
+    envs:                           # description of each environment variable
+        ...
+      - container: PUID
+        description:
+            en_us: Run Syncthing as specified uid.
+    ports:                          # description of each port
+      - container: "6969"
+        description:
+            en_us: WebUI HTTP Port
+        ...
+    volumes:                        # description of each volume
+        - container: /config
+          description:
+              en_us: Syncthing config directory.
+        - container: /DATA
+          description:
+            en_us: Syncthing Accessible Directory.
+x-casaos:
+    architectures:                  # a list of architectures that the app supports
+        - amd64
+        - arm
+        - arm64
+    main: syncthing                 # the name of the main service under `services`
+    author: CasaOS Team
+    category: Backup
+    description:                    # multiple locales are supported
+        en_us: Syncthing is a continuous file synchronization program. It synchronizes files between two or more computers in real time, safely protected from prying eyes. Your data is your data alone and you deserve to choose where it is stored, whether it is shared with some third party, and how it's transmitted over the internet.
+    developer: Syncthing
+    icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Syncthing/icon.png
+    tagline:                        # multiple locales are supported
+        en_us: Free, secure, and distributed file synchronisation tool.
+    thumbnail: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Jellyfin/thumbnail.jpg
+    title:                          # multiple locales are supported
+        en_us: Syncthing
+    tips:
+        before_install:
+            en_us: |
+                (some notes for user to read prior to installation, such as preset `username` and `password` - markdown is supported!)
+    index: /                        # the index page for web UI, e.g. index.html
+    port_map: "6969"                # the port for web UI
+...
+ports:
+    - target: 6969
+    published: ${WEBUI_PORT}
+    protocol: tcp
+...
+x-casaos:
+    architectures:
+        - amd64
+        - arm64
+        - arm
+...
+    port_map: ${WEBUI_PORT}
